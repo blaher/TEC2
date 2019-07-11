@@ -24,6 +24,10 @@ client.addListener('message'+channel, function (from, message) {
       case 'rank':
         client.say(channel, 'Ranks are coming soon.');
       break;
+
+      case 'seen':
+        client.say(channel, 'Who?');
+      break;
     }
   }
 });

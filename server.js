@@ -1,7 +1,12 @@
-var channel = '#nintendo';
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/config/config.js')[env];
+
+const network = config.network;
+const user = config.user;
+const channel = config.channel;
 
 var irc = require('irc');
-var client = new irc.Client('irc.chatspike.net', 'TEC2', {
+var client = new irc.Client(network, user, {
     channels: [channel],
 });
 

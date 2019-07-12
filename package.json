@@ -10,6 +10,9 @@
   "author": "Benjamin J. Young",
   "license": "GPL-3.0",
   "dependencies": {
-    "irc": "^0.5.2"
+    "irc": "^0.5.2",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.10.0",
+    "sequelize-cli": "^5.5.0"
   }
 }

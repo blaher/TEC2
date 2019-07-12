@@ -16,6 +16,8 @@ const channel = config.channel;
 console.log('Connecting to IRC...');
 var client = new irc.Client(network, user, {
     channels: [channel],
+    userName: 'TEC2',
+    realName: 'https://github.com/blaher/TEC2'
 });
 
 function seen_nick(nick) {

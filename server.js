@@ -1,7 +1,10 @@
-var http = require('http');
-var irc = require('irc');
-var sequelize = require('sequelize');
+const fs = require('fs');
+const http = require('http');
+const irc = require('irc');
+const path = require('path');
+const sequelize = require('sequelize');
 
+const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/config/config.js')[env];
 var db = require(__dirname + '/models');
@@ -15,7 +18,7 @@ var client = new irc.Client(network, user, {
     channels: [channel],
 });
 
-function collect_nick(nick) {
+function seen_nick(nick) {
   db.Nick.findOrCreate({where: {nick: nick}}).then(function([dbNick, created]) {
     if (!created) {
       dbNick.seen = sequelize.fn('NOW');
@@ -32,16 +35,16 @@ client.addListener('quit', function(quitUser) {
 
 client.addListener('names'+channel, function(nicks) {
   Object.keys(nicks).forEach(function(nick) {
-    collect_nick(nick);
+    seen_nick(nick);
   });
 });
 
 client.addListener('join'+channel, function(nick) {
-  collect_nick(nick);
+  seen_nick(nick);
 });
 
 client.addListener('message'+channel, function (from, message) {
-  collect_nick(from);
+  seen_nick(from);
   db.Nick.increment('messages', {where: {nick: from}});
 
   if (message.substring(0, 1) === '!') {
@@ -55,70 +58,43 @@ client.addListener('message'+channel, function (from, message) {
       params = message.substring(message.indexOf(' ')+1).split(' ');
     }
 
-    switch(command) {
-      case 'hello':
-        client.say(channel, 'Hello World!');
-      break;
+    var commands = [];
 
-      case 'strike':
-        var nick = from;
-        if (params[0]) {
-          nick = params[0];
-        }
+    fs
+      .readdirSync(__dirname + '/commands')
+      .filter(file => {
+        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+      })
+      .forEach(file => {
+        const command = require(path.join(__dirname + '/commands', file));
+        commands[file.replace('.js', '')] = command;
+      });
 
-        db.Nick.findOne({where: {nick: nick}}).then(function(dbNick) {
-          dbNick.strikes++;
-          dbNick.save();
-
-          if (dbNick.strikes === 1) {
-            client.say(channel, 'That\'s a strike, '+nick+'!');
-          } else {
-            client.say(channel, 'That\'s '+dbNick.strikes+' strikes, '+nick+'!');
-          }
-        });
-      break;
-
-      case 'rank':
-        client.say(channel, 'Ranks are coming soon.');
-      break;
-
-      case 'seen':
-        var nick = from;
-        if (params[0]) {
-          nick = params[0];
-        }
-
-        db.Nick.findOne({where: {nick: nick}}).then(function(dbNick) {
-          if (dbNick) {
-            client.say(channel, nick+' last seen '+dbNick.seen+'.');
-          } else {
-            client.say(channel, 'Who?');
-          }
-        });
-      break;
+    if (commands.indexOf(command)) {
+      commands[command](client, db, channel, from, params);
     }
   }
 });
 
 client.addListener('nick', function(oldnick, newnick) {
-  collect_nick(oldnick);
-  collect_nick(newnick);
+  seen_nick(oldnick);
+  seen_nick(newnick);
 });
 
 client.addListener('part'+channel, function(nick) {
-  collect_nick(nick);
+  seen_nick(nick);
 });
 
 client.addListener('quit', function(nick) {
-  collect_nick(nick);
+  seen_nick(nick);
 });
 
 client.addListener('kick'+channel, function(nick) {
-  collect_nick(nick);
+  seen_nick(nick);
 });
 
 client.addListener('kill', function(nick) {
-  collect_nick(nick);
+  seen_nick(nick);
 });
 
 client.addListener('error', function(message) {

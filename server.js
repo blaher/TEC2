@@ -12,6 +12,12 @@ var client = new irc.Client(network, user, {
     channels: [channel],
 });
 
+client.addListener('quit', function(quitUser) {
+  if (quitUser === user) {
+    client.send('NICK', user);
+  }
+});
+
 client.addListener('message'+channel, function (from, message) {
   if (message.substring(0, 1) === '!') {
     var command = message.substring(1);
@@ -40,7 +46,7 @@ client.addListener('message'+channel, function (from, message) {
 });
 
 client.addListener('error', function(message) {
-    console.log('error: ', message);
+  console.log('error: ', message);
 });
 
 // Health Check
@@ -48,4 +54,4 @@ http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
   res.write('The bot is running!');
   res.end();
-}).listen(80);
+}).listen(config.healthport);

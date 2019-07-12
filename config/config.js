@@ -9,7 +9,8 @@ module.exports = {
     dialect: 'mysql',
     network: 'irc.chatspike.net',
     user: 'TEC2-dev',
-    channel: '#gods'
+    channel: '#gods',
+    healthport: 8082
   },
   test: {
     username: process.env.TEC_DB_USER,
@@ -19,7 +20,8 @@ module.exports = {
     dialect: 'mysql',
     network: 'irc.chatspike.net',
     user: 'TEC2-test',
-    channel: '#gods'
+    channel: '#gods',
+    healthport: 8083
   },
   production: {
     username: process.env.TEC_DB_USER,
@@ -29,6 +31,7 @@ module.exports = {
     dialect: 'mysql',
     network: 'irc.chatspike.net',
     user: 'TEC2',
-    channel: '#nintendo'
+    channel: '#nintendo',
+    healthport: 80
   }
 };

@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.fn('NOW')
+    },
+    coins: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 10
     }
   }, {
     indexes: [

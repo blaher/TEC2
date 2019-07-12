@@ -46,6 +46,7 @@ client.addListener('join'+channel, function(nick) {
 client.addListener('message'+channel, function (from, message) {
   seen_nick(from);
   db.Nick.increment('messages', {where: {nick: from}});
+  db.Nick.increment('coins', {where: {nick: from}});
 
   if (message.substring(0, 1) === '!') {
     var command = message.substring(1);

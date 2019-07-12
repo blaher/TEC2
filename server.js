@@ -1,3 +1,6 @@
+var http = require('http');
+var irc = require('irc');
+
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/config/config.js')[env];
 
@@ -5,7 +8,6 @@ const network = config.network;
 const user = config.user;
 const channel = config.channel;
 
-var irc = require('irc');
 var client = new irc.Client(network, user, {
     channels: [channel],
 });
@@ -40,3 +42,10 @@ client.addListener('message'+channel, function (from, message) {
 client.addListener('error', function(message) {
     console.log('error: ', message);
 });
+
+// Health Check
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('The bot is running!');
+  res.end();
+}).listen(80);

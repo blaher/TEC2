@@ -32,6 +32,6 @@ module.exports = {
     network: 'irc.chatspike.net',
     user: 'TEC2',
     channel: '#nintendo',
-    healthport: 80
+    healthport: process.env.PORT
   }
 };

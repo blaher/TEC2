@@ -12,6 +12,7 @@ This bot is made to run on AWS. It's pretty simple to setup. Just create an elas
 
 ## Commands
   * `!hello` - Hello World!
+  * `!8ball <question>` Ask 8 Ball a question
   * Seen:
     * `!seen` - Tells you when the bot last saw you
     * `!seen <user>` - Tells you when the bot last saw an user

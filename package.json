@@ -4,7 +4,7 @@
   "description": "A bot for an IRC channel",
   "main": "server.js",
   "scripts": {
-    "test": "export NODE_ENV='test' && node server.js",
+    "test": "export NODE_ENV='test' && npx nodemon server.js",
     "start": "node server.js",
     "migrations": "npx sequelize-cli db:migrate"
   },
@@ -17,5 +17,8 @@
     "mysql2": "^1.6.5",
     "sequelize": "^5.10.0",
     "sequelize-cli": "^5.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   }
 }

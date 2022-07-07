@@ -13,7 +13,7 @@
   "dependencies": {
     "http": "0.0.0",
     "irc": "^0.5.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "mysql2": "^1.6.5",
     "sequelize": "^5.10.0",
     "sequelize-cli": "^5.5.0"
